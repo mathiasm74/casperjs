@@ -1597,8 +1597,9 @@ Casper.prototype.runStep = function runStep(step) {
     "use strict";
     /*eslint max-statements:0*/
     this.checkStarted();
-    var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
-        stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
+    var currentStepNumber = getCurrentSuiteId(this),
+        skipLog = utils.isObject(step.options) && step.options.skipLog === true,
+        stepInfo = f("Step %s %d/%d", step.name || "anonymous", currentStepNumber, this.steps.length),
         stepResult;
     function getCurrentSuiteId(casper) {
         try {
@@ -1621,9 +1622,9 @@ Casper.prototype.runStep = function runStep(step) {
                 }
                 clearInterval(stepTimeoutCheckInterval);
             }
-        }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteId(this));
+        }, this.options.stepTimeout, this, new Date().getTime(), currentStepNumber);
     }
-    this.emit('step.start', step);
+    this.emit('step.start', currentStepNumber);
     if (this.currentResponse) {
         if (step.options && (typeof step.options.data !== 'undefined')) {
             this.currentResponse.data = step.options.data;
