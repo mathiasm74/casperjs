@@ -2797,7 +2797,7 @@ function createPage(casper) {
 
 
 
-// Added dumpStep() from https://github.com/yotsumoto/casperjs-goto /Mathias
+// Added dumpSteps() from https://github.com/yotsumoto/casperjs-goto /Mathias
 
 /**
  * Dump Navigation Steps for debugging
