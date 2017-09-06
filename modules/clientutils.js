@@ -169,21 +169,15 @@
          * @return Boolean
          */
         this.elementVisible = function elementVisible(elem) {
-            var style;
-            try {
-                style = window.getComputedStyle(elem, null);
-            } catch (e) {
-                return false;
-            }
-            var hidden = style.visibility === 'hidden' || style.display === 'none';
-            if (hidden) {
-                return false;
-            }
-            var visibles = ["inline", "inline-block", "flex", "inline-flex"];
-            if (visibles.indexOf(style.display) !== -1) {
-                return true;
-            }
-            return elem.clientHeight > 0 && elem.clientWidth > 0;
+        var style;
+        try {
+            style = window.getComputedStyle(elem, null);
+        } catch (e) {
+            return false;
+        }
+            if(style.visibility === 'hidden' || style.display === 'none') return false;
+            var cr = elem.getBoundingClientRect();
+            return cr.width > 0 && cr.height > 0;
         };
 
         /**
@@ -411,6 +405,31 @@
             }
         };
 
+
+        /**
+         * Convert a Xpath or a css Selector into absolute css3 selector
+         *
+         * @param  String|Object     selector    CSS3/XPath selector
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @param  String            limit       Parent limit NodeName
+         * @return String
+         */
+
+        this.getCssSelector = function getCssSelector(selector, scope, limit) {
+            scope = scope || this.options.scope;
+            limit = limit || 'BODY';
+            var elem = (selector instanceof Node) ? selector : this.findOne(selector, scope);
+            if (!!elem && elem.nodeName !== "#document") {
+                var str = "";
+                while (elem.nodeName.toUpperCase() !== limit.toUpperCase()) {
+                    str = "> " + elem.nodeName + ':nth-child(' + ([].indexOf.call(elem.parentNode.children, elem) + 1) + ') ' + str;
+                    elem = elem.parentNode;
+                }
+                return str.substring(2);
+            }
+            return "";
+        };
+        
         /**
          * Retrieves total document height.
          * http://james.padolsey.com/javascript/get-document-height-cross-browser/
@@ -769,7 +788,7 @@
          */
         this.mouseEvent = function mouseEvent(type, selector, x, y) {
             var elem = this.findOne(selector);
-            if (!elem || !this.elementVisible(elem)) {
+            if (!elem) {
                 this.log("mouseEvent(): Couldn't find any element matching '" +
                     selector + "' selector", "error");
                 return false;
@@ -885,19 +904,35 @@
          * @param   String   method   HTTP method (default: GET).
          * @param   Object   data     Request parameters.
          * @param   Boolean  async    Asynchroneous request? (default: false)
-         * @param   Object   settings Other settings when perform the ajax request
+         * @param   Object   settings Other settings when perform the ajax request like some undocumented
+         * Request Headers.
+         * WARNING: an invalid header here may make the request fail silently.
          * @return  String            Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
+            var CONTENT_TYPE_HEADER = "Content-Type";
             method = method && method.toUpperCase() || "GET";
-            var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
+            var contentTypeValue = settings && settings.contentType || "application/x-www-form-urlencoded";
             xhr.open(method, url, !!async);
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             if (settings && settings.overrideMimeType) {
                 xhr.overrideMimeType(settings.overrideMimeType);
+            }
+            if (settings && settings.headers) {
+               for (var header in settings.headers) {
+                   if (header === CONTENT_TYPE_HEADER) {
+                      // this way Content-Type is correctly overriden,
+                      // otherwise it is concatenated by xhr.setRequestHeader()
+                      // see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader
+                      // If the header was already set, the value will be augmented.
+                       contentTypeValue = settings.headers[header];
+                   } else {
+                       xhr.setRequestHeader(header, settings.headers[header]);
+                   }
+              }
             }
             if (method === "POST") {
                 if (typeof data === "object") {
@@ -912,7 +947,7 @@
                 } else if (typeof data === "string") {
                     dataString = data;
                 }
-                xhr.setRequestHeader("Content-Type", contentType);
+                xhr.setRequestHeader(CONTENT_TYPE_HEADER, contentTypeValue);
             }
             xhr.send(method === "POST" ? dataString : null);
             return xhr.responseText;
@@ -984,53 +1019,55 @@
             } catch (e) {
                 this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
-
-            filter = String(field.getAttribute('type') ? field.getAttribute('type') : field.nodeName).toLowerCase();
-            switch (filter) {
-                case "checkbox":
-                case "radio":
-                    field.checked = value ? true : false;
-                    break;
-                case "file":
-                    throw {
-                        name: "FileUploadError",
-                        message: "File field must be filled using page.uploadFile",
-                        path: value,
-                        id: field.id || null
-                    };
-                    break;
-                case "select":
-                    if (field.multiple) {
-                        [].forEach.call(field.options, function(option) {
-                            option.selected = value.indexOf(option.value) !== -1;
-                        });
-                        // If the values can't be found, try search options text
-                        if (field.value === "") {
+            if (field.getAttribute('contenteditable')) {
+                field.textContent = value;
+            } else {
+                filter = String(field.getAttribute('type') ? field.getAttribute('type') : field.nodeName).toLowerCase();
+                switch (filter) {
+                    case "checkbox":
+                    case "radio":
+                        field.checked = value ? true : false;
+                        break;
+                    case "file":
+                        throw {
+                            name: "FileUploadError",
+                            message: "File field must be filled using page.uploadFile",
+                            path: value,
+                            id: field.id || null
+                        };
+                        break;
+                    case "select":
+                        if (field.multiple) {
                             [].forEach.call(field.options, function(option) {
-                                option.selected = value.indexOf(option.text) !== -1;
+                                option.selected = value.indexOf(option.value) !== -1;
                             });
-                        }
-                    } else {
-                        // PhantomJS 1.x.x can't handle setting value to ''
-                        if (value === "") {
-                            field.selectedIndex = -1;
+                            // If the values can't be found, try search options text
+                            if (field.value === "") {
+                                [].forEach.call(field.options, function(option) {
+                                    option.selected = value.indexOf(option.text) !== -1;
+                                });
+                            }
                         } else {
-                            field.value = value;
-                        }
+                            // PhantomJS 1.x.x can't handle setting value to ''
+                            if (value === "") {
+                                field.selectedIndex = -1;
+                            } else {
+                                field.value = value;
+                            }
 
-                        // If the value can't be found, try search options text
-                        if (field.value !== value) {
-                            [].some.call(field.options, function(option) {
-                                option.selected = value === option.text;
-                                return value === option.text;
-                            });
+                            // If the value can't be found, try search options text
+                            if (field.value !== value) {
+                                [].some.call(field.options, function(option) {
+                                    option.selected = value === option.text;
+                                    return value === option.text;
+                                });
+                            }
                         }
-                    }
-                    break;
-                default:
-                    field.value = value;
+                        break;
+                    default:
+                        field.value = value;
+                }
             }
-
             ['change', 'input'].forEach(function(name) {
                 var event = document.createEvent("HTMLEvents");
                 event.initEvent(name, true, true);
@@ -1045,6 +1082,18 @@
                  ": " + err, "warning");
             }
             return out;
+        };
+
+        /**
+         * set the default scope selector
+         *
+         * @param  String  selector  CSS3 selector
+         * @return String
+         */
+        this.setScope = function setScope(selector) {
+            var scope = !(this.options.scope instanceof HTMLElement) ? this.getCssSelector(this.options.scope) : "";
+            this.options.scope = (selector !== "") ? this.findOne(selector) : document;
+            return scope;
         };
 
         /**

@@ -1,6 +1,6 @@
 .. _events_filters:
 
-Events & filters
+Events & Filters
 ================
 
 CasperJS provides an `event handler <#events>`_ very similar to the `nodejs <http://nodejs.org>`_' `one <https://github.com/joyent/node/blob/master/lib/events.js>`_; actually it borrows most of its codebase. CasperJS also adds `filters <#filters>`_, which are basically ways to alter values asynchronously.
@@ -8,8 +8,6 @@ CasperJS provides an `event handler <#events>`_ very similar to the `nodejs <htt
 
 .. index:: ! events
 
-Events
-------
 
 Using events is pretty much straightforward if you're a node developer, or if you worked with any evented system before::
 
@@ -20,7 +18,7 @@ Using events is pretty much straightforward if you're a node developer, or if yo
     });
 
 Emitting you own events
-+++++++++++++++++++++++
+-----------------------
 
 Of course you can emit your own events, using the ``Casper.emit()`` method::
 
@@ -39,7 +37,7 @@ Of course you can emit your own events, using the ``Casper.emit()`` method::
     casper.run();
 
 Removing events
-+++++++++++++++++++++++
+---------------
 
 You can also remove events. This is particularly useful when running a lot of tests where you might need to add and remove different events for different tests::
 
@@ -99,8 +97,8 @@ Here is an example of how to use this in a casperjs test within the tearDown fun
 
 .. _events_list:
 
-Events reference
-++++++++++++++++
+``Events`` reference
+--------------------
 
 ``back``
 ~~~~~~~~
@@ -108,6 +106,8 @@ Events reference
 **Arguments:** ``None``
 
 Emitted when the embedded browser is asked to go back a step in its history.
+
+------------------------------------------------------------------------
 
 ``capture.saved``
 ~~~~~~~~~~~~~~~~~
@@ -118,12 +118,16 @@ Emitted when a :index:`screenshot` image has been captured.
 
 .. index:: click
 
+------------------------------------------------------------------------
+
 ``click``
 ~~~~~~~~~
 
 **Arguments:** ``selector``
 
 Emitted when the ``Casper.click()`` method has been called.
+
+------------------------------------------------------------------------
 
 ``complete.error``
 ~~~~~~~~~~~~~~~~~~
@@ -140,6 +144,8 @@ By default, CasperJS doesn't listen to this event, you have to declare your own 
         this.die("Complete callback has failed: " + err);
     });
 
+------------------------------------------------------------------------
+
 ``die``
 ~~~~~~~
 
@@ -149,6 +155,8 @@ Emitted when the ``Casper.die()`` method has been called.
 
 .. index:: download
 
+------------------------------------------------------------------------
+
 ``downloaded.file``
 ~~~~~~~~~~~~~~~~~~~
 
@@ -156,14 +164,18 @@ Emitted when the ``Casper.die()`` method has been called.
 
 Emitted when a file has been downloaded by :ref:`Casper.download() <casper_download>`; ``target`` will contain the path to the downloaded file.
 
+------------------------------------------------------------------------
+
 ``downloaded.error``
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``url``
 
 Emitted when a file has encoutered an error when downloaded by :ref:`Casper.download() <casper_download>`; ``url`` will contain the url of the downloaded file.
 
 .. index:: error
+
+------------------------------------------------------------------------
 
 ``error``
 ~~~~~~~~~
@@ -176,6 +188,8 @@ Emitted when an error hasn't been explicitly caught within the CasperJS/PhantomJ
 
 .. index:: exit
 
+------------------------------------------------------------------------
+
 ``exit``
 ~~~~~~~~
 
@@ -183,7 +197,29 @@ Emitted when an error hasn't been explicitly caught within the CasperJS/PhantomJ
 
 Emitted when the ``Casper.exit()`` method has been called.
 
+.. index:: fileDownload
+
+------------------------------------------------------------------------
+
+``fileDownloadError``
+~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``error``
+
+Emitted when an error occurs on downloading file.
+
+------------------------------------------------------------------------
+
+``fileToDownload``
+~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``Object``
+
+Emitted when response occurs with a Content-Disposition header.
+
 .. index:: fill
+
+------------------------------------------------------------------------
 
 ``fill``
 ~~~~~~~~
@@ -192,6 +228,8 @@ Emitted when the ``Casper.exit()`` method has been called.
 
 Emitted when a form is filled using the ``Casper.fill()`` method.
 
+------------------------------------------------------------------------
+
 ``forward``
 ~~~~~~~~~~~
 
@@ -199,7 +237,18 @@ Emitted when a form is filled using the ``Casper.fill()`` method.
 
 Emitted when the embedded browser is asked to go forward a step in its history.
 
+------------------------------------------------------------------------
+
+``frame.changed``
+~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``name, status``
+
+Emitted when the current frame is changed with ``Casper.withPopup, Casper.switchToFrame() ...``.
+
 .. index:: auth
+
+------------------------------------------------------------------------
 
 ``http.auth``
 ~~~~~~~~~~~~~
@@ -209,6 +258,8 @@ Emitted when the embedded browser is asked to go forward a step in its history.
 Emitted when http authentication parameters are set.
 
 .. index:: HTTP
+
+------------------------------------------------------------------------
 
 ``http.status.[code]``
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -221,6 +272,8 @@ Emitted when any given HTTP reponse is received with the status code specified b
         casper.echo(resource.url + ' is 404');
     })
 
+------------------------------------------------------------------------
+
 ``load.started``
 ~~~~~~~~~~~~~~~~
 
@@ -228,12 +281,16 @@ Emitted when any given HTTP reponse is received with the status code specified b
 
 Emitted when PhantomJS' ``WebPage.onLoadStarted`` event callback is called.
 
+------------------------------------------------------------------------
+
 ``load.failed``
 ~~~~~~~~~~~~~~~
 
 **Arguments:** ``Object``
 
 Emitted when PhantomJS' ``WebPage.onLoadFinished`` event callback has been called and failed.
+
+------------------------------------------------------------------------
 
 ``load.finished``
 ~~~~~~~~~~~~~~~~~
@@ -243,6 +300,8 @@ Emitted when PhantomJS' ``WebPage.onLoadFinished`` event callback has been calle
 Emitted when PhantomJS' ``WebPage.onLoadFinished`` event callback is called.
 
 .. index:: log
+
+------------------------------------------------------------------------
 
 ``log``
 ~~~~~~~
@@ -260,12 +319,16 @@ Emitted when the ``Casper.log()`` method has been called. The ``entry`` paramete
 
 .. index:: click
 
+------------------------------------------------------------------------
+
 ``mouse.click``
 ~~~~~~~~~~~~~~~
 
 **Arguments:** ``args``
 
 Emitted when the mouse left-click something or somewhere.
+
+------------------------------------------------------------------------
 
 ``mouse.down``
 ~~~~~~~~~~~~~~
@@ -274,6 +337,8 @@ Emitted when the mouse left-click something or somewhere.
 
 Emitted when the mouse presses on something or somewhere with the left button.
 
+------------------------------------------------------------------------
+
 ``mouse.move``
 ~~~~~~~~~~~~~~
 
@@ -281,12 +346,16 @@ Emitted when the mouse presses on something or somewhere with the left button.
 
 Emitted when the mouse moves onto something or somewhere.
 
+------------------------------------------------------------------------
+
 ``mouse.up``
 ~~~~~~~~~~~~
 
 **Arguments:** ``args``
 
 Emitted when the mouse releases the left button over something or somewhere.
+
+------------------------------------------------------------------------
 
 ``navigation.requested``
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -298,6 +367,8 @@ Emitted when the mouse releases the left button over something or somewhere.
 Emitted each time a navigation operation has been requested. Available navigation types are: ``LinkClicked``, ``FormSubmitted``, ``BackOrForward``, ``Reload``, ``FormResubmitted`` and ``Other``.
 
 .. index:: HTTP
+
+------------------------------------------------------------------------
 
 ``open``
 ~~~~~~~~
@@ -311,12 +382,16 @@ Emitted when an HTTP request is sent. First callback arg is the location, second
         data:   "foo=42&chuck=norris"
     }
 
+------------------------------------------------------------------------
+
 ``page.created``
 ~~~~~~~~~~~~~~~~
 
 **Arguments:** ``page``
 
 Emitted when PhantomJS' ``WebPage`` object used by CasperJS has been created.
+
+------------------------------------------------------------------------
 
 ``page.error``
 ~~~~~~~~~~~~~~
@@ -329,6 +404,8 @@ Emitted when retrieved page leaves a Javascript error uncaught::
         this.echo("Error: " + msg, "ERROR");
     });
 
+------------------------------------------------------------------------
+
 ``page.initialized``
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -338,14 +415,40 @@ Emitted when PhantomJS' ``WebPage`` object used by CasperJS has been initialized
 
 .. index:: HTTP
 
+------------------------------------------------------------------------
+
 ``page.resource.received``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Arguments:** ``response``
+**Arguments:** ``responseData``
 
-Emitted when the HTTP response corresponding to current required url has been received.
+Emitted when the HTTP response corresponding to current required url has been received::
+
+    casper.on('page.resource.received', function(responseData) {
+       this.echo(responseData.url);
+    });
+
+Properties of responseData are:
+
+- ``id``: the number of the requested resource
+- ``url``: the url of the resource
+- ``time``: a Date object
+- ``headers``: the list of headers (list of objects {name:'', value:''})
+- ``bodySize``: the size of the received content (may increase during multiple call of the callback)
+- ``contentType``: the content type of the resource
+- ``contentCharset``: the charset used for the content of the resource  (slimerjs only).
+- ``redirectURL``: if the request has been redirected, this is the redirected url
+- ``stage``: “start”, “end” or “” for intermediate chunk of data
+- ``status``: the HTTP response code (200..)
+- ``statusText``: the HTTP response text for the status (“Ok”...)
+- ``referrer``: the referer url (slimerjs only)
+- ``body``: the content, it may change during multiple call for the same request (slimerjs only).
+- ``httpVersion.major``: the major part of the HTTP protocol version (slimerjs only).
+- ``httpVersion.minor``: the minor part of the HTTP protocol version (slimerjs only).
 
 .. index:: HTTP
+
+------------------------------------------------------------------------
 
 ``page.resource.requested``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -356,15 +459,33 @@ Emitted when a new HTTP request is performed to open the required url.
 
 .. versionadded:: 1.1
 
-**Arguments:** ``requestData, request``
+**Arguments:** ``requestData, networkRequest``
 
 You can also abort requests::
 
-    casper.on('page.resource.requested', function(requestData, request) {
+    casper.on('page.resource.requested', function(requestData, networkRequest) {
         if (requestData.url.indexOf('http://adserver.com') === 0) {
-            request.abort();
+            networkRequest.abort();
         }
     });
+    
+Properties of requestData are:
+
+- ``id``: the number of the requested resource
+- ``method``: the http method (“get”, “post”..)
+- ``url``: the url of the resource
+- ``time``: a Date object
+- ``headers``: the list of headers (list of objects {name:'', value:''})
+- ``postData``: a string containing the body of the request, when method is “post” or “put” (SlimerJS 0.9)
+
+The networkRequest object has two methods:
+
+- ``abort()``: call it to cancel the request. onResourceReceived and onLoadFinished will be called.
+- ``changeUrl(url)``: abort the current request and do an immediate redirection to the given url.
+- ``setHeader(key, value, merge)``: allows you to set an header on the HTTP request. If value is null or an empty string, the header will be removed. The merge parameter (only available on SlimerJS), is a boolean: true to merge the given value with an existing value for this header. If false, the old value is replaced by the new one. (Introduced: SlimerJS 0.9)
+
+
+------------------------------------------------------------------------
 
 ``popup.created``
 ~~~~~~~~~~~~~~~~~
@@ -373,12 +494,16 @@ You can also abort requests::
 
 Emitted when a new window has been opened.
 
+------------------------------------------------------------------------
+
 ``popup.loaded``
 ~~~~~~~~~~~~~~~~
 
 **Arguments:** ``WebPage``
 
 Emitted when a new window has been loaded.
+
+------------------------------------------------------------------------
 
 ``popup.closed``
 ~~~~~~~~~~~~~~~~
@@ -387,12 +512,16 @@ Emitted when a new window has been loaded.
 
 Emitted when a new opened window has been closed.
 
+------------------------------------------------------------------------
+
 ``remote.alert``
 ~~~~~~~~~~~~~~~~
 
 **Arguments:** ``message``
 
 Emitted when a remote ``alert()`` call has been performed.
+
+------------------------------------------------------------------------
 
 ``remote.callback``
 ~~~~~~~~~~~~~~~~~~~
@@ -401,12 +530,32 @@ Emitted when a remote ``alert()`` call has been performed.
 
 Emitted when a remote `window.callPhantom(data) <https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#wiki-webpage-onCallback>`_ call has been performed.
 
+------------------------------------------------------------------------
+
+``remote.longRunningScript``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``WebPage``
+
+Emitted when any remote longRunningScript call has been performed.
+
+You have to call ``stopJavaScript`` method ::
+
+    casper.on('remote.longRunningScript', function stopLongScript(webpage) {
+        webpage.stopJavaScript();
+        return true;
+    });
+
+------------------------------------------------------------------------
+
 ``remote.message``
 ~~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``msg``
 
 Emitted when any remote console logging call has been performed.
+
+------------------------------------------------------------------------
 
 ``resource.error``
 ~~~~~~~~~~~~~~~~~~~~~
@@ -420,6 +569,8 @@ Emitted when any requested resource fails to load properly. The received ``resou
 - ``url``: resource url
 - ``id``: resource id
 
+------------------------------------------------------------------------
+
 ``resource.received``
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -427,12 +578,84 @@ Emitted when any requested resource fails to load properly. The received ``resou
 
 Emitted when any resource has been received.
 
+**Arguments:** ``responseData``
+
+Emitted when the HTTP response corresponding to current required url has been received::
+
+    casper.on('resource.received', function(responseData) {
+       this.echo(responseData.url);
+    });
+
+Properties of responseData are:
+
+- ``id``: the number of the requested resource
+- ``url``: the url of the resource
+- ``time``: a Date object
+- ``headers``: the list of headers (list of objects {name:'', value:''})
+- ``bodySize``: the size of the received content (may increase during multiple call of the callback)
+- ``contentType``: the content type of the resource
+- ``contentCharset``: the charset used for the content of the resource  (slimerjs only).
+- ``redirectURL``: if the request has been redirected, this is the redirected url
+- ``stage``: “start”, “end” or “” for intermediate chunk of data
+- ``status``: the HTTP response code (200..)
+- ``statusText``: the HTTP response text for the status (“Ok”...)
+- ``referrer``: the referer url (slimerjs only)
+- ``body``: the content, it may change during multiple call for the same request (slimerjs only).
+- ``httpVersion.major``: the major part of the HTTP protocol version (slimerjs only).
+- ``httpVersion.minor``: the minor part of the HTTP protocol version (slimerjs only).
+
+------------------------------------------------------------------------
+
 ``resource.requested``
+~~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``requestData, networkRequest``
+
+You can also abort or change requests and alse update Headers ::
+
+    casper.on('resource.requested', function(requestData, networkRequest) {
+        if (requestData.url.indexOf('http://adserver.com') === 0) {
+            networkRequest.abort();
+        }
+    });
+
+Properties of requestData are:
+
+- ``id``: the number of the requested resource
+- ``method``: the http method (“get”, “post”..)
+- ``url``: the url of the resource
+- ``time``: a Date object
+- ``headers``: the list of headers (list of objects {name:'', value:''})
+- ``postData``: a string containing the body of the request, when method is “post” or “put” (SlimerJS 0.9)
+
+The networkRequest object has two methods:
+
+- ``abort()``: call it to cancel the request. onResourceReceived and onLoadFinished will be called.
+- ``changeUrl(url)``: abort the current request and do an immediate redirection to the given url.
+- ``setHeader(key, value, merge)``: allows you to set an header on the HTTP request. If value is null or an empty string, the header will be removed. The merge parameter (only available on SlimerJS), is a boolean: true to merge the given value with an existing value for this header. If false, the old value is replaced by the new one. (Introduced: SlimerJS 0.9)
+
+------------------------------------------------------------------------
+
+``resource.timeout``
 ~~~~~~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``request``
 
-Emitted when any resource has been requested.
+Emitted when the execution time of any resource has exceeded the value of settings.resourceTimeout.
+
+you can configure timeout with ``settings.resourceTimeout`` parameter.
+
+Properties of responseData are:
+
+- ``id``: the number of the requested resource
+- ``url``: the url of the resource
+- ``errorCode``: an error code: 408
+- ``errorString``: the error message.
+- ``time``: a Date object
+- ``headers``: the list of headers (list of objects {name:'', value:''})
+- ``method``: the http method (“get”, “post”..)
+
+------------------------------------------------------------------------
 
 ``run.complete``
 ~~~~~~~~~~~~~~~~
@@ -441,12 +664,16 @@ Emitted when any resource has been requested.
 
 Emitted when the whole series of steps in the stack have been executed.
 
+------------------------------------------------------------------------
+
 ``run.start``
 ~~~~~~~~~~~~~
 
 **Arguments:** ``None``
 
 Emitted when ``Casper.run()`` is called.
+
+------------------------------------------------------------------------
 
 ``starting``
 ~~~~~~~~~~~~
@@ -455,12 +682,16 @@ Emitted when ``Casper.run()`` is called.
 
 Emitted when ``Casper.start()`` is called.
 
+------------------------------------------------------------------------
+
 ``started``
 ~~~~~~~~~~~
 
 **Arguments:** ``None``
 
 Emitted when Casper has been started using ``Casper.start()``.
+
+------------------------------------------------------------------------
 
 ``step.added``
 ~~~~~~~~~~~~~~
@@ -469,12 +700,16 @@ Emitted when Casper has been started using ``Casper.start()``.
 
 Emitted when a new navigation step has been added to the stack.
 
+------------------------------------------------------------------------
+
 ``step.bypassed``
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``step, step``
 
 Emitted when a new navigation step has been reached by bypass (destination, origin).
+
+------------------------------------------------------------------------
 
 ``step.complete``
 ~~~~~~~~~~~~~~~~~
@@ -483,12 +718,16 @@ Emitted when a new navigation step has been reached by bypass (destination, orig
 
 Emitted when a navigation step has been executed.
 
+------------------------------------------------------------------------
+
 ``step.created``
 ~~~~~~~~~~~~~~~~
 
 **Arguments:** ``fn``
 
 Emitted when a new navigation step has been created.
+
+------------------------------------------------------------------------
 
 ``step.error``
 ~~~~~~~~~~~~~~
@@ -505,12 +744,16 @@ By default, CasperJS doesn't listen to this event, you have to declare your own 
         this.die("Step has failed: " + err);
     });
 
+------------------------------------------------------------------------
+
 ``step.start``
 ~~~~~~~~~~~~~~
 
 **Arguments:** ``step``
 
 Emitted when a navigation step has been started.
+
+------------------------------------------------------------------------
 
 ``step.timeout``
 ~~~~~~~~~~~~~~~~
@@ -519,12 +762,16 @@ Emitted when a navigation step has been started.
 
 Emitted when a navigation step has timed out.
 
+------------------------------------------------------------------------
+
 ``timeout``
 ~~~~~~~~~~~
 
 **Arguments:** ``None``
 
 Emitted when the execution time of the script has reached the ``Casper.options.timeout`` value.
+
+------------------------------------------------------------------------
 
 ``url.changed``
 ~~~~~~~~~~~~~~~
@@ -537,12 +784,16 @@ Emitted each time the current page url changes.
 
 .. index:: viewport
 
+------------------------------------------------------------------------
+
 ``viewport.changed``
 ~~~~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``[width, height]``
 
 Emitted when the viewport has been changed.
+
+------------------------------------------------------------------------
 
 ``wait.done``
 ~~~~~~~~~~~~~
@@ -551,12 +802,16 @@ Emitted when the viewport has been changed.
 
 Emitted when a ``Casper.wait()``\ *operation ends.*
 
+------------------------------------------------------------------------
+
 ``wait.start``
 ~~~~~~~~~~~~~~
 
 **Arguments:** ``None``
 
 Emitted when a ``Casper.wait()`` operation starts.
+
+------------------------------------------------------------------------
 
 ``waitFor.timeout``
 ~~~~~~~~~~~~~~~~~~~
@@ -570,8 +825,8 @@ Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded t
 
 .. index:: filters
 
-Filters
--------
+``Filters`` Reference
+---------------------
 
 Filters allow you to alter some values asynchronously. Sounds obscure? Let's take a simple example and imagine you would like to alter every single url opened by CasperJS to append a ``foo=42`` query string parameter::
 
@@ -583,12 +838,16 @@ Filters allow you to alter some values asynchronously. Sounds obscure? Let's tak
 
 There you have it, every single requested url will have this appended. Let me bet you'll find far more interesting use cases than my silly one ;)
 
+Every filter methods called emit an identical event. For instance, "page.confirm" filter sends "page.confirm" event.
+
 Here'a the list of all available filters with their expected return value:
 
 Filters reference
-+++++++++++++++++
+
 
 .. index:: screenshot
+
+------------------------------------------------------------------------
 
 ``capture.target_filename``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -608,6 +867,19 @@ Allows to alter the value of the filename where a screen capture should be store
 
 Allows to alter every message written onto stdout.
 
+------------------------------------------------------------------------
+
+``fileDownload``
+~~~~~~~~~~~~~~~~
+
+**Arguments:** ``url, Object [filename,size,contentType]``
+
+**Return type:** ``String``
+
+Allows to alter the path for the file that must be downloaded.
+
+------------------------------------------------------------------------
+
 ``log.message``
 ~~~~~~~~~~~~~~~
 
@@ -617,6 +889,8 @@ Allows to alter every message written onto stdout.
 
 Allows to alter every log message.
 
+------------------------------------------------------------------------
+
 ``open.location``
 ~~~~~~~~~~~~~~~~~
 
@@ -625,6 +899,8 @@ Allows to alter every log message.
 **Return type:** ``String``
 
 Allows to alter every url before it being opened.
+
+------------------------------------------------------------------------
 
 ``page.confirm``
 ~~~~~~~~~~~~~~~~
@@ -640,6 +916,28 @@ Allows to react on a javascript ``confirm()`` call::
     casper.setFilter("page.confirm", function(msg) {
         return msg === "Do you like vbscript?" ? false : true;
     });
+
+------------------------------------------------------------------------
+
+``page.filePicker``
+~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``oldFile``
+
+**Return type:** ``String``
+
+.. versionadded:: 1.4
+
+Allows to react on a webpage.onFilePicker call::
+
+    casper.setFilter("page.filePicker", function(oldFile) {
+        if (system.os.name === 'windows') {
+            return 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+        }
+        return '/etc/hosts';
+    });
+
+------------------------------------------------------------------------
 
 ``page.prompt``
 ~~~~~~~~~~~~~~~

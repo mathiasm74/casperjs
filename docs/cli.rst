@@ -72,6 +72,10 @@ Execution results:
 
 .. hint::
 
+   You may need to wrap an option containing a space with escaped double quotes in Windows. --foo=\\"space bar\\"
+
+.. hint::
+
    What if you want to check if any arg or option has been passed to your script? Here you go::
 
        // removing default options passed by the Python executable
@@ -162,3 +166,4 @@ Sample usage:
     1234567
     "01234567"
 
+For very long numbers, use the ``raw`` property as there is an ECMA script limitation with a numeric precision of up to 17 places. More info here - https://github.com/casperjs/casperjs/issues/1134
