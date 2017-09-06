@@ -367,6 +367,21 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // CasperJS version, extracted from package.json - see http://semver.org/
     phantom.casperVersion = (function getCasperVersion(path) {
+        return {    //mm npm trash the version number in package.json when installing the module on the heroku server!
+            major: 1,
+            minor: 1,
+            patch: 4,
+            ident: "",
+            toString: function toString() {
+                var version = [this.major, this.minor, this.patch].join('.');
+                if (this.ident) {
+                    version = [version, this.ident].join('-');
+                }
+                return version;
+            }
+        };
+
+/* mm
         var parts, patchPart, pkg, pkgFile;
         pkgFile = fs.absolute(fs.pathJoin(path, 'package.json'));
         if (!fs.exists(pkgFile)) {
@@ -394,7 +409,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                 }
                 return version;
             }
-        };
+        };*/
     })(phantom.casperPath);
 
     // phantomjs2 has paths in require, but needs patchRequire anyway
